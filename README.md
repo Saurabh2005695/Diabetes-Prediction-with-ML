@@ -6,13 +6,7 @@ DiaPredict AI is an end-to-end Machine Learning web application designed for int
 
 ## Application Demo Showcase
 
-<!-- Replace the path below with your demo GIF or video file path -->
-![Application Demo Showcase](![Uploading ezgif.com-video-to-gif-converter.gif…]()
-)
-
-*Note: Replace `assets/demo.gif` with the path or URL of your recorded demonstration GIF.*
-
----
+![Uploading ezgif.com-video-to-gif-converter.gif…]()
 
 ## Key Features
 

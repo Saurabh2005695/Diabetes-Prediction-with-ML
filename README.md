@@ -3,11 +3,6 @@
 DiaPredict AI is an end-to-end Machine Learning web application designed for interactive diabetes risk prediction, physiological factor analysis, and custom model evaluation. The platform combines a Linear Support Vector Machine (SVM) classifier trained on clinical data with a Flask backend REST API and a modern web dashboard.
 
 ---
-
-## Application Demo Showcase
-
-![Uploading ezgif.com-video-to-gif-converter.gif…]()
-
 ## Key Features
 
 - **Clinical Risk Assessment Engine**: Calculates diabetes risk probability and severity tier (Low, Moderate, High) based on eight medical parameters.

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiaPredict AI - Machine Learning Diabetes Assessment & Model Suite</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-background">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="layout-wrapper">
+        <!-- Sidebar / Navigation -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="title">DiaPredict<span class="highlight">.AI</span></span>
+                    <span class="subtitle">Clinical ML Diagnostics Platform</span>
+                </div>
+            </div>
+
+            <nav class="nav-tabs">
+                <button class="nav-btn active" data-tab="predictor-tab">
+                    <i class="fa-solid fa-calculator"></i> Predictor
+                </button>
+                <button class="nav-btn" data-tab="model-tab">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Model
+                </button>
+                <button class="nav-btn" data-tab="analytics-tab">
+                    <i class="fa-solid fa-chart-pie"></i> Model Analytics
+                </button>
+            </nav>
+
+            <div class="active-model-badge" id="activeModelBadge">
+                <span class="pulse-dot"></span>
+                <span id="activeModelText">Model: Linear SVM (Colab Model - 77.3% Acc)</span>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-container">
+            <!-- TAB 1: PREDICTOR -->
+            <section id="predictor-tab" class="tab-content active">
+                <div class="predictor-grid">
+                    <!-- Left: Form Inputs -->
+                    <div class="card glass-card input-card">
+                        <div class="card-header">
+                            <div>
+                                <h2><i class="fa-solid fa-stethoscope"></i> Clinical Parameters</h2>
+                                <p class="card-desc">Adjust patient physiological & lab metrics below</p>
+                            </div>
+                            <!-- Sample Loader Buttons -->
+                            <div class="sample-presets">
+                                <span class="preset-label">Preset:</span>
+                                <button type="button" class="btn-preset" data-preset="0">Colab Sample</button>
+                                <button type="button" class="btn-preset" data-preset="1">Low Risk</button>
+                                <button type="button" class="btn-preset" data-preset="2">High Risk</button>
+                            </div>
+                        </div>
+
+                        <form id="predictionForm" class="form-grid">
+                            <!-- Glucose -->
+                            <div class="input-group highlight-group">
+                                <div class="label-row">
+                                    <label for="Glucose"><i class="fa-solid fa-droplet"></i> Fasting Glucose</label>
+                                    <span class="badge-range">Normal: 70-125 mg/dL</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="Glucose_slider" min="50" max="250" value="110" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="Glucose" name="Glucose" value="110" min="0" max="300" step="1" required>
+                                        <span class="unit">mg/dL</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BMI -->
+                            <div class="input-group highlight-group">
+                                <div class="label-row">
+                                    <label for="BMI"><i class="fa-solid fa-weight-scale"></i> Body Mass Index (BMI)</label>
+                                    <span class="badge-range">Normal: 18.5-24.9</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="BMI_slider" min="15" max="60" step="0.1" value="26.5" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="BMI" name="BMI" value="26.5" min="0" max="70" step="0.1" required>
+                                        <span class="unit">kg/m²</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Age -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="Age"><i class="fa-solid fa-user"></i> Age</label>
+                                    <span class="badge-range">21 - 85 yrs</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="Age_slider" min="21" max="85" value="35" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="Age" name="Age" value="35" min="1" max="120" step="1" required>
+                                        <span class="unit">yrs</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pregnancies -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="Pregnancies"><i class="fa-solid fa-baby"></i> Pregnancies</label>
+                                    <span class="badge-range">0 - 17</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="Pregnancies_slider" min="0" max="17" value="1" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="Pregnancies" name="Pregnancies" value="1" min="0" max="20" step="1" required>
+                                        <span class="unit">count</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Blood Pressure -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="BloodPressure"><i class="fa-solid fa-heart"></i> Diastolic BP</label>
+                                    <span class="badge-range">Normal: 60-80 mmHg</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="BloodPressure_slider" min="40" max="140" value="72" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="BloodPressure" name="BloodPressure" value="72" min="0" max="180" step="1" required>
+                                        <span class="unit">mmHg</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Insulin -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="Insulin"><i class="fa-solid fa-vial"></i> 2-Hour Serum Insulin</label>
+                                    <span class="badge-range">Normal: 15-160 mu U/ml</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="Insulin_slider" min="0" max="400" value="85" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="Insulin" name="Insulin" value="85" min="0" max="900" step="1" required>
+                                        <span class="unit">mu U/ml</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Skin Thickness -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="SkinThickness"><i class="fa-solid fa-ruler-vertical"></i> Triceps Skinfold</label>
+                                    <span class="badge-range">Normal: 10-30 mm</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="SkinThickness_slider" min="0" max="70" value="23" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="SkinThickness" name="SkinThickness" value="23" min="0" max="100" step="1" required>
+                                        <span class="unit">mm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pedigree Function -->
+                            <div class="input-group">
+                                <div class="label-row">
+                                    <label for="DiabetesPedigreeFunction"><i class="fa-solid fa-dna"></i> Family Genetic Pedigree</label>
+                                    <span class="badge-range">0.08 - 2.4</span>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="DiabetesPedigreeFunction_slider" min="0.05" max="2.4" step="0.01" value="0.35" class="range-slider">
+                                    <div class="number-input-wrap">
+                                        <input type="number" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" value="0.35" min="0" max="3" step="0.001" required>
+                                        <span class="unit">score</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary submit-btn" id="predictBtn">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Calculate Risk Assessment
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Prediction Results & Breakdown -->
+                    <div class="results-column">
+                        <div class="card glass-card result-card" id="resultCard">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-chart-line"></i> Risk Assessment Output</h2>
+                                <span class="model-tag" id="resultModelTag">Model: Standard ML</span>
+                            </div>
+
+                            <div class="gauge-section">
+                                <div class="gauge-container">
+                                    <svg class="gauge-svg" viewBox="0 0 200 120">
+                                        <!-- Gauge Track Background -->
+                                        <path d="M 20 100 A 80 80 0 0 1 180 100" class="gauge-bg" />
+                                        <!-- Gauge Fill Path -->
+                                        <path d="M 20 100 A 80 80 0 0 1 180 100" class="gauge-fill" id="gaugeFill" />
+                                    </svg>
+                                    <div class="gauge-center">
+                                        <span class="risk-number" id="riskPercent">--%</span>
+                                        <span class="risk-title">DIABETES RISK</span>
+                                    </div>
+                                </div>
+
+                                <div class="status-banner" id="statusBanner">
+                                    <div class="status-badge" id="statusBadge">Awaiting Input</div>
+                                    <p class="status-desc" id="statusDesc">Adjust parameters and click calculate to view patient risk analysis.</p>
+                                </div>
+                            </div>
+
+                            <!-- Risk Factor Breakdown -->
+                            <div class="breakdown-section">
+                                <h3><i class="fa-solid fa-list-check"></i> Key Physiological Drivers</h3>
+                                <div class="factor-list" id="factorList">
+                                    <div class="empty-state">No factors analyzed yet.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MODEL UPLOAD -->
+            <section id="model-tab" class="tab-content">
+                <div class="upload-wrapper">
+                    <div class="card glass-card upload-card">
+                        <div class="card-header">
+                            <div>
+                                <h2><i class="fa-solid fa-file-import"></i> Upload Trained ML Model</h2>
+                                <p class="card-desc">Supply your own pre-trained model binary (`.pkl`, `.joblib`, `.sav`)</p>
+                            </div>
+                            <button type="button" class="btn-secondary" id="resetModelBtn">
+                                <i class="fa-solid fa-rotate-left"></i> Restore Default Model
+                            </button>
+                        </div>
+
+                        <div class="drop-zone" id="dropZone">
+                            <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                            <h3>Drag & Drop your model file here</h3>
+                            <p>Supports <strong>Scikit-Learn</strong> pickled estimators (`.pkl`, `.joblib`)</p>
+                            <span class="browse-btn">Browse Files</span>
+                            <input type="file" id="modelFileInput" accept=".pkl,.joblib,.sav" hidden>
+                        </div>
+
+                        <div class="upload-info-box">
+                            <h4><i class="fa-solid fa-circle-info"></i> Expected Input Feature Schema</h4>
+                            <p>Your uploaded model must accept 8 scaled numerical features in the following precise order:</p>
+                            <div class="feature-tags">
+                                <span class="tag">1. Pregnancies</span>
+                                <span class="tag">2. Glucose</span>
+                                <span class="tag">3. BloodPressure</span>
+                                <span class="tag">4. SkinThickness</span>
+                                <span class="tag">5. Insulin</span>
+                                <span class="tag">6. BMI</span>
+                                <span class="tag">7. DiabetesPedigreeFunction</span>
+                                <span class="tag">8. Age</span>
+                            </div>
+                        </div>
+
+                        <div class="alert-box" id="uploadAlert" style="display: none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: MODEL ANALYTICS -->
+            <section id="analytics-tab" class="tab-content">
+                <div class="analytics-grid">
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-chart-column"></i> Feature Importance Weights</h2>
+                            <p class="card-desc">Gini Importance / Coefficient magnitudes of the primary model</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="importanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-trophy"></i> Classifier Comparison Matrix</h2>
+                            <p class="card-desc">Cross-validation benchmarks across candidate models</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>DiaPredict AI &bull; Pair-programmed with ML Best Practices &bull; Powered by Scikit-Learn & Flask</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "best_model": "Linear SVM (Colab Model)",
+  "metrics": {
+    "accuracy": 0.7727272727272727,
+    "train_accuracy": 0.7866449511400652,
+    "precision": 0.7567567567567568,
+    "recall": 0.5185185185185185,
+    "f1": 0.6153846153846154,
+    "roc_auc": 0.7920370370370371,
+    "confusion_matrix": [
+      [
+        91,
+        9
+      ],
+      [
+        26,
+        28
+      ]
+    ]
+  },
+  "all_models": {
+    "Linear SVM (Colab)": {
+      "accuracy": 0.7727272727272727,
+      "roc_auc": 0.7920370370370371
+    }
+  },
+  "features": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "feature_importances": [
+    {
+      "feature": "Glucose",
+      "importance": 1.0099
+    },
+    {
+      "feature": "BMI",
+      "importance": 0.6166
+    },
+    {
+      "feature": "Pregnancies",
+      "importance": 0.3069
+    },
+    {
+      "feature": "DiabetesPedigreeFunction",
+      "importance": 0.2552
+    },
+    {
+      "feature": "BloodPressure",
+      "importance": 0.2115
+    },
+    {
+      "feature": "Insulin",
+      "importance": 0.1675
+    },
+    {
+      "feature": "Age",
+      "importance": 0.0739
+    },
+    {
+      "feature": "SkinThickness",
+      "importance": 0.0004
+    }
+  ]
+}

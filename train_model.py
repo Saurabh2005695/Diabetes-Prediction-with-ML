@@ -4,6 +4,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
@@ -26,10 +27,20 @@ def train_exact_colab_model():
     X = diabetes_dataset.drop(columns='Outcome', axis=1)
     Y = diabetes_dataset['Outcome']
 
-    # 3. Data Standardization with StandardScaler (Colab CELL 16-18)
+    # 3. Data Imputation & Standardization with StandardScaler (Colab CELL 16-18)
+    imputer = SimpleImputer(missing_values=np.nan, strategy='median')
+    # Fit imputer on raw features with 0 replaced by NaN for zero-invalid physiological features
+    zero_fields = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
+    X_imp = X.copy()
+    for col in zero_fields:
+        X_imp[col] = X_imp[col].replace(0, np.nan)
+    
+    imputer.fit(X_imp)
+    X_imputed = imputer.transform(X_imp)
+
     scaler = StandardScaler()
-    scaler.fit(X)
-    standardized_data = scaler.transform(X)
+    scaler.fit(X_imputed)
+    standardized_data = scaler.transform(X_imputed)
     X = standardized_data
 
     # 4. Train Test Split (Colab CELL 23: test_size=0.2, stratify=Y, random_state=2)
@@ -63,15 +74,16 @@ def train_exact_colab_model():
 
     # 7. Test sample from Colab (CELL 35): (5, 166, 72, 19, 175, 25.8, 0.587, 51)
     colab_sample = np.asarray((5, 166, 72, 19, 175, 25.8, 0.587, 51)).reshape(1, -1)
-    std_colab_sample = scaler.transform(colab_sample)
+    std_colab_sample = scaler.transform(imputer.transform(colab_sample))
     colab_pred = classifier.predict(std_colab_sample)[0]
     print(f"\n[*] Testing Colab sample (5, 166, 72, 19, 175, 25.8, 0.587, 51):")
     print(f"    Prediction: {colab_pred} -> {'Diabetic' if colab_pred == 1 else 'Non-Diabetic'}")
 
-    # 8. Save Trained Model and Scaler
+    # 8. Save Trained Model, Scaler, and Imputer
     joblib.dump(classifier, 'diabetes_model.pkl')
     joblib.dump(scaler, 'scaler.pkl')
-    print("\n[+] Saved 'diabetes_model.pkl' and 'scaler.pkl'")
+    joblib.dump(imputer, 'imputer.pkl')
+    print("\n[+] Saved 'diabetes_model.pkl', 'scaler.pkl', and 'imputer.pkl'")
 
     # Save metadata
     feature_names = list(diabetes_dataset.columns[:-1])

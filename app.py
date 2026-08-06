@@ -49,7 +49,13 @@ def load_system_assets():
         if os.path.exists(SCALER_PATH):
             active_scaler = joblib.load(SCALER_PATH)
         if os.path.exists(IMPUTER_PATH):
-            active_imputer = joblib.load(IMPUTER_PATH)
+            try:
+                active_imputer = joblib.load(IMPUTER_PATH)
+                if hasattr(active_imputer, 'statistics_') and not hasattr(active_imputer, '_fill_dtype'):
+                    active_imputer._fill_dtype = getattr(active_imputer.statistics_, 'dtype', None)
+            except Exception as imp_load_err:
+                print(f"[-] Imputer load warning: {imp_load_err}")
+                active_imputer = None
         if os.path.exists(METRICS_PATH):
             with open(METRICS_PATH, 'r') as f:
                 active_metrics = json.load(f)
@@ -94,7 +100,18 @@ def predict():
             for col in zero_fields:
                 if col in raw_df_imp.columns and raw_df_imp.loc[0, col] == 0:
                     raw_df_imp.loc[0, col] = np.nan
-            processed_input = active_imputer.transform(raw_df_imp)
+            try:
+                # Patch missing _fill_dtype attribute for cross-version compatibility
+                if hasattr(active_imputer, 'statistics_') and not hasattr(active_imputer, '_fill_dtype'):
+                    active_imputer._fill_dtype = getattr(active_imputer.statistics_, 'dtype', None)
+                processed_input = active_imputer.transform(raw_df_imp)
+            except Exception as imp_transform_err:
+                print(f"[-] Imputer transform fallback triggered: {imp_transform_err}")
+                default_medians = {'Glucose': 117.0, 'BloodPressure': 72.0, 'SkinThickness': 23.0, 'Insulin': 30.0, 'BMI': 32.0}
+                for col, def_val in default_medians.items():
+                    if col in raw_df_imp.columns and (pd.isna(raw_df_imp.loc[0, col]) or raw_df_imp.loc[0, col] == 0):
+                        raw_df_imp.loc[0, col] = def_val
+                processed_input = raw_df_imp.fillna(0)
         else:
             processed_input = raw_df
 

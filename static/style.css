@@ -789,12 +789,6 @@ body {
     gap: 24px;
 }
 
-@media (max-width: 900px) {
-    .analytics-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 .chart-container {
     position: relative;
     height: 320px;
@@ -807,4 +801,185 @@ body {
     padding: 24px 0 10px 0;
     color: var(--text-dim);
     font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM (Mobile, Tablet, Laptop & Desktop)
+   ========================================================================== */
+
+/* Laptop & Large Tablet (1024px and below) */
+@media (max-width: 1024px) {
+    .layout-wrapper {
+        padding: 16px 20px;
+    }
+    
+    .navbar {
+        padding: 14px 18px;
+        gap: 12px;
+    }
+    
+    .predictor-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+}
+
+/* Tablet & Mobile Landscape (768px and below) */
+@media (max-width: 768px) {
+    .layout-wrapper {
+        padding: 12px 14px;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 16px;
+    }
+    
+    .brand {
+        justify-content: center;
+    }
+    
+    .nav-tabs {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        white-space: nowrap;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .active-model-badge {
+        align-self: center;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        text-align: center;
+    }
+    
+    .card {
+        padding: 18px 16px;
+        border-radius: var(--radius-md);
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .sample-presets {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .btn-preset {
+        flex: 1;
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Mobile Portrait (480px and below) */
+@media (max-width: 480px) {
+    .layout-wrapper {
+        padding: 8px 10px;
+    }
+    
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+    
+    .brand-text .title {
+        font-size: 1.2rem;
+    }
+    
+    .brand-text .subtitle {
+        font-size: 0.65rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .input-group {
+        padding: 10px 12px;
+    }
+    
+    .label-row {
+        flex-direction: row;
+        gap: 4px;
+    }
+    
+    .label-row label {
+        font-size: 0.8rem;
+    }
+    
+    .badge-range {
+        font-size: 0.65rem;
+    }
+    
+    .slider-row {
+        gap: 8px;
+    }
+    
+    .number-input-wrap {
+        width: 90px;
+        padding: 3px 6px;
+    }
+    
+    .number-input-wrap input {
+        font-size: 0.85rem;
+    }
+    
+    .submit-btn {
+        grid-column: span 1;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .gauge-container {
+        width: 180px;
+        height: 110px;
+    }
+    
+    .risk-number {
+        font-size: 1.8rem;
+    }
+    
+    .chart-container {
+        height: 240px;
+    }
+    
+    .drop-zone {
+        padding: 30px 12px;
+    }
+    
+    .drop-icon {
+        font-size: 2.4rem;
+    }
 }

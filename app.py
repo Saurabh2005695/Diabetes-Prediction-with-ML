@@ -8,11 +8,14 @@ from flask import Flask, request, jsonify, render_template
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload
 
+# Base directory resolution for absolute paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Paths to models
-MODEL_PATH = 'diabetes_model.pkl'
-SCALER_PATH = 'scaler.pkl'
-IMPUTER_PATH = 'imputer.pkl'
-METRICS_PATH = 'model_metrics.json'
+MODEL_PATH = os.path.join(BASE_DIR, 'diabetes_model.pkl')
+SCALER_PATH = os.path.join(BASE_DIR, 'scaler.pkl')
+IMPUTER_PATH = os.path.join(BASE_DIR, 'imputer.pkl')
+METRICS_PATH = os.path.join(BASE_DIR, 'model_metrics.json')
 
 # Global model state
 active_model = None
@@ -284,5 +287,6 @@ def get_samples():
     return jsonify({'success': True, 'samples': samples})
 
 if __name__ == '__main__':
-    print("[*] Starting Diabetes ML Web Application on http://127.0.0.1:5000")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"[*] Starting Diabetes ML Web Application on http://0.0.0.0:{port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
